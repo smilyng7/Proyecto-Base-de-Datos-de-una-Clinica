@@ -1,0 +1,309 @@
+// ==========================================
+// MÓDULO 1: RECURSOS HUMANOS Y USUARIOS
+// ==========================================
+db.empleados.insertMany([
+  {
+    "_id": 1,
+    "documento": { "tipo": "DNI", "numero": "70000001" },
+    "nombres": "Carlos",
+    "apellidos": "Augusto",
+    "fecha_contratacion": new Date("2025-01-10"),
+    "cargo": {
+      "nombre_cargo": "Médico Especialista",
+      "sueldo_base": 6500.00,
+      "departamento": "Medicina Externa"
+    },
+    "asistencias": [
+      { "fecha": "2026-05-15", "hora_entrada": "07:55:00", "hora_salida": "14:05:00" }
+    ],
+    "usuario_sistema": {
+      "username": "carlos.augusto",
+      "password_hash": "$2b$12$R9Zxu2K...",
+      "rol": "Médico",
+      "estado": "Activo"
+    }
+  },
+  {
+    "_id": 2,
+    "documento": { "tipo": "DNI", "numero": "70000002" },
+    "nombres": "Beatriz",
+    "apellidos": "Luna",
+    "fecha_contratacion": new Date("2025-02-15"),
+    "cargo": {
+      "nombre_cargo": "Médico Especialista",
+      "sueldo_base": 6500.00,
+      "departamento": "Medicina Externa"
+    },
+    "usuario_sistema": {
+      "username": "beatriz.luna",
+      "password_hash": "$2b$12$K7Ytr4Q...",
+      "rol": "Médico",
+      "estado": "Activo"
+    }
+  },
+  {
+    "_id": 3,
+    "documento": { "tipo": "DNI", "numero": "70000003" },
+    "nombres": "Daniel",
+    "apellidos": "Gamarra",
+    "cargo": { "nombre_cargo": "Médico Especialista", "sueldo_base": 6500.00, "departamento": "Medicina Externa" }
+  },
+  {
+    "_id": 4,
+    "documento": { "tipo": "DNI", "numero": "70000004" },
+    "nombres": "Elena",
+    "apellidos": "Paredes",
+    "cargo": { "nombre_cargo": "Médico Especialista", "sueldo_base": 6500.00, "departamento": "Medicina Externa" }
+  },
+  {
+    "_id": 5,
+    "documento": { "tipo": "DNI", "numero": "70000005" },
+    "nombres": "Felipe",
+    "apellidos": "Tello",
+    "cargo": { "nombre_cargo": "Médico Especialista", "sueldo_base": 6500.00, "departamento": "Medicina Externa" }
+  }
+]);
+
+db.roles_permisos.insertMany([
+  {
+    "rol": "Médico",
+    "permisos": [
+      { "modulo": "Citas", "leer": true, "escribir": true, "eliminar": false },
+      { "modulo": "Laboratorio", "leer": true, "escribir": true, "eliminar": false }
+    ]
+  },
+  {
+    "rol": "Cajero",
+    "permisos": [
+      { "modulo": "Facturacion", "leer": true, "escribir": true, "eliminar": false }
+    ]
+  }
+]);
+
+// ==========================================
+// MÓDULO 2: CITAS Y ATENCIÓN AMBULATORIA
+// ==========================================
+db.citas.insertMany([
+  {
+    "_id": 1,
+    "fecha_cita": "2026-05-15",
+    "hora_cita": "08:00:00",
+    "estado": "PROGRAMADA",
+    "paciente": {
+      "dni": "12345678",
+      "nombres": "Juan Carlos",
+      "apellidos": "Perez Silva",
+      "fecha_nacimiento": "1985-04-12",
+      "genero": "M"
+    },
+    "medico": {
+      "id_medico": 1,
+      "cmp": "CMP10001",
+      "nombre_completo": "Carlos Augusto",
+      "especialidad": "Medicina General",
+      "correo": "m.general1@clinica.com"
+    },
+    "consultorio": { "nro": "101A", "piso": 1, "sede": "Sede Central" },
+    "reserva_online": { "token": "abc123token_seguro", "expiracion": "2026-05-14T08:00:00Z" }
+  },
+  {
+    "_id": 2,
+    "fecha_cita": "2026-05-08",
+    "hora_cita": "09:30:00",
+    "estado": "ATENDIDA",
+    "paciente": { "dni": "87654321", "nombres": "Maria Elena", "apellidos": "Gomez Ruiz" },
+    "medico": { "id_medico": 2, "cmp": "CMP10002", "nombre_completo": "Beatriz Luna", "especialidad": "Pediatria" },
+    "consultorio": { "nro": "102B", "piso": 1, "sede": "Sede Central" }
+  },
+  {
+    "_id": 3,
+    "fecha_cita": "2026-05-16",
+    "hora_cita": "10:00:00",
+    "estado": "CANCELADA",
+    "paciente": { "dni": "11223344", "nombres": "Luis Fernando", "apellidos": "Lopez Vega" },
+    "medico": { "id_medico": 3, "cmp": "CMP10003", "nombre_completo": "Daniel Gamarra", "especialidad": "Cardiologia" },
+    "consultorio": { "nro": "201A", "piso": 2, "sede": "Sede Central" }
+  }
+]);
+
+db.disponibilidades_medicas.insertMany([
+  { "id_medico": 1, "medico": "Carlos Augusto", "dia_semana": "LUNES", "hora_inicio": "08:00:00", "hora_fin": "14:00:00" },
+  { "id_medico": 2, "medico": "Beatriz Luna", "dia_semana": "MARTES", "hora_inicio": "09:00:00", "hora_fin": "13:00:00" }
+]);
+
+// ==========================================
+// MÓDULO 3: HOSPITALIZACIÓN Y CAMAS
+// ==========================================
+db.hospitalizaciones.insertMany([
+  {
+    "_id": 1,
+    "admision": {
+      "paciente": { "dni": "12345678", "nombre": "Juan Carlos Perez Silva" },
+      "fecha_ingreso": new Date("2026-06-01T10:00:00Z"),
+      "motivo_ingreso": "Insuficiencia respiratoria aguda",
+      "medico_responsable": "Carlos Augusto"
+    },
+    "cama_asignada": { "codigo": "CAM-101", "tipo": "Privada", "costo_dia": 250.00 },
+    "habitacion": { "numero": "101", "pabellon": "Pabellón A - Norte" },
+    "fecha_asignacion": new Date("2026-06-01T10:15:00Z"),
+    "fecha_liberacion": null,
+    "visitas_diarias": [
+      { "fecha": "2026-06-02", "medico": "Carlos Augusto", "evolucion": "Paciente estable con oxígeno." }
+    ],
+    "traslados": []
+  },
+  {
+    "_id": 2,
+    "admision": {
+      "paciente": { "dni": "87654321", "nombre": "Maria Elena Gomez Ruiz" },
+      "fecha_ingreso": new Date("2026-05-10T14:00:00Z"),
+      "motivo_ingreso": "Post-operatorio",
+      "medico_responsable": "Beatriz Luna"
+    },
+    "cama_asignada": { "codigo": "CAM-102", "tipo": "Compartida", "costo_dia": 120.00 },
+    "habitacion": { "numero": "102", "pabellon": "Pabellón B - Sur" },
+    "fecha_asignacion": new Date("2026-05-10T14:30:00Z"),
+    "fecha_liberacion": new Date("2026-05-15T09:00:00Z"),
+    "alta_medica": {
+      "fecha_alta": new Date("2026-05-15T09:00:00Z"),
+      "diagnostico_final": "Recuperación exitosa de apendicectomía",
+      "indicaciones": "Reposo absoluto por 7 días y Amoxicilina."
+    }
+  }
+]);
+
+// ==========================================
+// MÓDULO 4: FARMACIA E INVENTARIO
+// ==========================================
+db.inventario_farmacia.insertMany([
+  {
+    "_id": 1,
+    "medicamento": {
+      "nombre_generico": "Amoxicilina 500mg",
+      "nombre_comercial": "Amoxil",
+      "categoria": "Antibióticos",
+      "presentacion": "Tableta"
+    },
+    "lote": "LOTE2026A",
+    "proveedor": { "ruc": "20123456789", "razon_social": "Droguería FarmaPerú" },
+    "fecha_vencimiento": "2028-12-31",
+    "cantidad_stock": 500,
+    "stock_minimo": 100,
+    "almacen": "Almacén Central Especializado"
+  },
+  {
+    "_id": 2,
+    "medicamento": {
+      "nombre_generico": "Paracetamol 500mg",
+      "nombre_comercial": "Panadol",
+      "categoria": "Analgésicos",
+      "presentacion": "Tableta"
+    },
+    "lote": "LOTE2026B",
+    "proveedor": { "ruc": "20987654321", "razon_social": "Distribuidora Médica S.A." },
+    "fecha_vencimiento": "2027-06-15",
+    "cantidad_stock": 45,
+    "stock_minimo": 50,
+    "almacen": "Almacén de Emergencias"
+  }
+]);
+
+db.recetas_emitidas.insertMany([
+  {
+    "_id": 1,
+    "id_cita": 2,
+    "medico": { "nombre": "Beatriz Luna", "cmp": "CMP10002" },
+    "fecha_emision": new Date("2026-05-08"),
+    "instrucciones_generales": "Tomar los medicamentos después de las comidas.",
+    "detalles": [
+      { "id_medicamento": 1, "nombre": "Amoxicilina 500mg", "dosis": "1 tableta", "frecuencia": "Cada 8 horas", "duracion": "7 días" }
+    ],
+    "entregas": [
+      { "cantidad_entregada": 21, "fecha_entrega": new Date("2026-05-08T10:00:00Z") }
+    ]
+  }
+]);
+
+// ==========================================
+// MÓDULO 5: LABORATORIO Y EXÁMENES
+// ==========================================
+db.laboratorio_ordenes.insertMany([
+  {
+    "_id": 1,
+    "paciente": { "dni": "12345678", "nombre": "Juan Carlos Perez Silva" },
+    "medico_solicitante": { "nombre": "Carlos Augusto", "cmp": "CMP10001" },
+    "fecha_orden": new Date("2026-05-15"),
+    "prioridad": "Urgente",
+    "examenes": [
+      {
+        "codigo_examen": "EX-001",
+        "nombre_examen": "Glucosa",
+        "tipo": "Bioquímica",
+        "costo_base": 25.00,
+        "estado": "Completado",
+        "muestra": { "tipo": "Sangre", "codigo_barras": "BAR-009182", "fecha_toma": "2026-05-15" },
+        "resultado": {
+          "valores_obtenidos": { "resultado": 145, "unidad": "mg/dL" },
+          "fecha_resultado": new Date("2026-05-15T11:00:00Z"),
+          "tecnologo": "Lic. Marco Torres (Lic-4412)",
+          "equipo_utilizado": "Analizador Bioquímico Cobas c311",
+          "referencias": { "genero": "Mismo", "minimo": 70.00, "maximo": 100.00 }
+        }
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "paciente": { "dni": "87654321", "nombre": "Maria Elena Gomez Ruiz" },
+    "medico_solicitante": { "nombre": "Beatriz Luna", "cmp": "CMP10002" },
+    "fecha_orden": new Date("2026-05-20"),
+    "prioridad": "Normal",
+    "examenes": [
+      {
+        "codigo_examen": "EX-002",
+        "nombre_examen": "Hemograma Completo",
+        "tipo": "Hematología",
+        "costo_base": 45.00,
+        "estado": "Procesando",
+        "muestra": { "tipo": "Sangre", "codigo_barras": "BAR-009183", "fecha_toma": "2026-05-20" }
+      }
+    ]
+  }
+]);
+
+// ==========================================
+// MÓDULO 6: FACTURACIÓN Y CAJA
+// ==========================================
+db.facturaciones.insertMany([
+  {
+    "_id": 1,
+    "paciente": { "dni": "12345678", "nombre": "Juan Carlos Perez Silva" },
+    "comprobante": { "tipo": "Boleta", "serie": "B001", "correlativo": "00000412" },
+    "fecha_emision": new Date("2026-05-15"),
+    "conceptos_detalle": [
+      { "servicio": "Consulta Externa Medicina General", "cantidad": 1, "precio_unitario": 40.00, "descuento_seguro": 28.00 }
+    ],
+    "subtotal": 12.00,
+    "igv": 2.16,
+    "total": 14.16,
+    "pagos": [
+      { "metodo_pago": "Efectivo", "monto_pagado": 14.16, "fecha_pago": new Date("2026-05-15") }
+    ]
+  },
+  {
+    "_id": 2,
+    "paciente": { "dni": "87654321", "nombre": "Maria Elena Gomez Ruiz" },
+    "comprobante": { "tipo": "Factura", "serie": "F001", "correlativo": "00000789" },
+    "fecha_emision": new Date("2026-05-22"),
+    "conceptos_detalle": [
+      { "servicio": "Servicio de Ecografía Completa", "cantidad": 1, "precio_unitario": 120.00, "descuento_seguro": 0.00 },
+      { "servicio": "Derecho de Cama Hospitalización", "cantidad": 5, "precio_unitario": 120.00, "descuento_seguro": 100.00 }
+    ],
+    "subtotal": 620.00,
+    "igv": 111.60,
+    "total": 731.60,
+    "pagos": [
+      { "metodo_pago": "Tarjeta de Crédito", "monto_pagado": 731.60, "fecha_pago": new Date("2026-05-22") }
+    ]
+  }
+]);
